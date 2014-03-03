@@ -359,7 +359,7 @@ module Capistrano
             environment = {}
             environment["CONFIGURE_OPTS"] = rbenv_configure_options.to_s if rbenv_configure_options
             environment["MAKE_OPTS"] = rbenv_make_options.to_s if rbenv_make_options
-            invoke_command("#{rbenv_command(:env => environment)} install #{version.dump}", options)
+            invoke_command("#{rbenv_command(:env => environment)} install #{version.dump} -v", options)
           end
 
           def uninstall(version, options={})

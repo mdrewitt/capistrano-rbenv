@@ -1,65 +1,45 @@
-# capistrano-rbenv
+# Capistrano::rbenv
 
-a capistrano recipe to manage rubies with [rbenv](https://github.com/sstephenson/rbenv).
+This gem provides idiomatic rbenv support for Capistrano 3.x (and 3.x
+*only*).
+
+## Please Note
+
+If you want to use this plugin with Cap 2.x, please use 1.x version of the gem.
+Source code and docs for older integration is available in [another repo](https://github.com/yyuu/capistrano-rbenv)
+
+Thanks a lot to [@yyuu](https://github.com/yyuu) for merging his gem with official one.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'capistrano-rbenv'
+    gem 'capistrano', '~> 3.1'
+    gem 'capistrano-rbenv', '~> 2.0'
 
 And then execute:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install capistrano-rbenv
+    $ bundle install
 
 ## Usage
 
-This recipe will install [rbenv](https://github.com/sstephenson/rbenv) and [ruby-build](https://github.com/sstephenson/ruby-build) during `deploy:setup` task.
+    # Capfile
+    require 'capistrano/rbenv'
 
-To setup rbenv for your application, add following in you `config/deploy.rb`.
 
-```ruby
-# config/deploy.rb
-require "capistrano-rbenv"
-set :rbenv_ruby_version, "1.9.3-p392"
-```
+    # config/deploy.rb
+    set :rbenv_type, :user # or :system, depends on your rbenv setup
+    set :rbenv_ruby, '2.0.0-p247'
+    set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+    set :rbenv_map_bins, %w{rake gem bundle ruby rails}
+    set :rbenv_roles, :all # default value
 
-Following options are available to manage your rbenv.
-
- * `:rbenv_branch` - the git branch to install `rbenv` from. use `master` by default.
- * `:rbenv_bundler_gem` - package name of `bundler`.
- * `:rbenv_bundler_version` -  version for `bundler` package.
- * `:rbenv_cmd` - the `rbenv` command.
- * `:rbenv_path` - the path where `rbenv` will be installed. use `$HOME/.rbenv` by default.
- * `:rbenv_plugins` - rbenv plugins to install. install `ruby-build` by default.
- * `:rbenv_repository` - repository URL of rbenv.
- * `:rbenv_ruby_dependencies` - dependency packages.
- * `:rbenv_ruby_version` - the ruby version to install. install `1.9.3-p392` by default.
- * `:rbenv_install_bundler` - controls whether installing bundler or not. `true` by default.
- * `:rbenv_install_dependencies` - controls whether installing dependencies or not. `true` if the required packages are missing.
- * `:rbenv_setup_shell` - setup rbenv in your shell config or not. `true` by default. users who are using Chef/Puppet may prefer setting this value `false`.
- * `:rbenv_setup_default_environment` - setup `RBENV_ROOT` and update `PATH` to use rbenv over capistrano. `true` by default.
- * `:rbenv_configure_files` - list of shell configuration files to be configured for rbenv. by default, guessing from user's `$SHELL` and `$HOME`.
- * `:rbenv_configure_basenames` - advanced option for `:rbenv_configure_files`. list of filename of your shell configuration files if you don't like the default value of `:rbenv_configure_files`.
+If your rbenv is located in some custom path, you can use `rbenv_custom_path` to set it.
 
 ## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-## Author
-
-- YAMASHITA Yuu (https://github.com/yyuu)
-- Geisha Tokyo Entertainment Inc. (http://www.geishatokyo.com/)
-- Nico Schottelius (http://www.nico.schottelius.org/)
-
-## License
-
-MIT
